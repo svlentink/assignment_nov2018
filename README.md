@@ -41,6 +41,17 @@ With so little containers,
 this is the easiest tool for the job.
 With more containers, Traefik would be better or a container orchestrator.
 
+I've used one container with build arguments, less code to read/maintain for reviewer.
+
+Infrastructure as a code; just run `docker-compose up`.
+
+Builder pattern in Dockerfile for smaller images.
+
+I've explained the most 'difficult' part with comments in the code, see the fitcheck location in nginx.conf.
+For the remaining things, I try to using sensible variable names (except for my cookie jar)
+and use default everywhere, resulting in less code.
+
+
 ## debug
 
 ```
