@@ -1,0 +1,30 @@
+version: '3'
+services:
+  proxy:
+    image: nginx:alpine
+    ports:
+      - 8000:80
+    volumes:
+    # overwrite default nginx config
+      - $PWD/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    # example of using include
+      - $PWD/nginx-include.conf:/nginx-include-mounted-in-container.conf:ro
+  country:
+    build:
+      context: .
+      args:
+        JAR_URL: https://s3-eu-west-1.amazonaws.com/devops-assesment/countries-assembly-1.0.1.jar
+        JAR_HASH: 92bf1a691fc6dc835b21e0d74102c41ad84635f9
+  rock:
+    build:
+      context: .
+      args:
+        JAR_URL: https://s3-eu-west-1.amazonaws.com/devops-assesment/airports-assembly-1.0.1.jar
+        JAR_HASH: 0bd35ea555b9aabaf30d255f3cb90aedf6bebca1
+  folk:
+    build:
+      context: .
+      args:
+        JAR_URL: https://s3-eu-west-1.amazonaws.com/devops-assesment/airports-assembly-1.1.0.jar
+        JAR_HASH: 40d479396e37f61b88913ad3de3a421c75ed8f45
+
