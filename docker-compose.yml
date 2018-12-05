@@ -2,6 +2,10 @@ version: '3'
 services:
   proxy:
     image: nginx:alpine
+    networks:
+      - rock
+      - country
+      - folk
     ports:
       - 8000:80
     volumes:
@@ -10,21 +14,28 @@ services:
     # example of using include
       - $PWD/nginx-include.conf:/nginx-include-mounted-in-container.conf:ro
   country:
+    networks:
+      - country
     build:
       context: .
       args:
-        JAR_URL: https://s3-eu-west-1.amazonaws.com/devops-assesment/countries-assembly-1.0.1.jar
-        JAR_HASH: 92bf1a691fc6dc835b21e0d74102c41ad84635f9
+        JAR_FILE: countries-assembly-1.0.1.jar
   rock:
+    networks:
+      - rock
     build:
       context: .
       args:
-        JAR_URL: https://s3-eu-west-1.amazonaws.com/devops-assesment/airports-assembly-1.0.1.jar
-        JAR_HASH: 0bd35ea555b9aabaf30d255f3cb90aedf6bebca1
+        JAR_FILE: airports-assembly-1.0.1.jar
   folk:
+    networks:
+      - folk
     build:
       context: .
       args:
-        JAR_URL: https://s3-eu-west-1.amazonaws.com/devops-assesment/airports-assembly-1.1.0.jar
-        JAR_HASH: 40d479396e37f61b88913ad3de3a421c75ed8f45
+        JAR_FILE: airports-assembly-1.1.0.jar
 
+networks:
+  folk: {}
+  rock: {}
+  country: {}

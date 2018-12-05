@@ -1,15 +1,15 @@
 FROM alpine AS base
 
-RUN apk add --no-cache curl
+RUN apk add --no-cache wget
 
-# we get these from the docker-compose.yml
-ARG JAR_URL
-ARG JAR_HASH
+COPY checksums.txt /
+RUN cd /; for i in `cat checksums.txt`; do \
+  (echo $i|grep jar; wget https://s3-eu-west-1.amazonaws.com/devops-assesment/$i) || true; done
 
-RUN curl -o /cookie.jar $JAR_URL
-RUN if [ `sha1sum /cookie.jar|cut -f1 -d\ ` != $JAR_HASH ]; then exit 1; fi
-RUN sha1sum /cookie.jar # just checking on stdout
+RUN sha1sum -c /checksums.txt
 
-FROM java:alpine
-COPY --from=base /cookie.jar /service.jar
+FROM openjdk:jre-slim
+# we get this from the docker-compose.yml
+ARG JAR_FILE
+COPY --from=base /$JAR_FILE /service.jar
 ENTRYPOINT ["java","-jar","/service.jar"]
